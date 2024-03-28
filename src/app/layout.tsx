@@ -21,7 +21,7 @@ export default function RootLayout({
       <head>
         <PlausibleProvider domain={process.env.PLAUSIBLE_DOMAIN || ""} />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={"dark"}>{children}</body>
     </html>
   )
 }
