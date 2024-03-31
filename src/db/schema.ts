@@ -11,26 +11,13 @@ import {
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
 
-export const formElements = pgEnum("field_type", [
-  "RadioGroup",
-  "Select",
-  "Input",
-  "Textarea",
-  "Switch",
-]);
-
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
   email: text("email").notNull(),
-  emailVerified: timestamp(
-    "emailVerified",
-    { mode: "date" }
-  ),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-  stripeCustomerId: text(
-    "stripe_customer_id"
-  ),
+  stripeCustomerId: text("stripe_customer_id"),
   subscribed: boolean("subscribed"),
 });
 
@@ -78,7 +65,7 @@ export const verificationTokens = pgTable(
   })
 );
 
-export const forms = pgTable("forms", {
+export const quizzes = pgTable("quizzes", {
   id: serial("id").primaryKey(),
   name: text("name"),
   description: text("description"),
@@ -86,119 +73,55 @@ export const forms = pgTable("forms", {
   published: boolean("published"),
 });
 
-export const formsRelations = relations(
-  forms,
-  ({ many, one }) => ({
-    questions: many(questions),
-    user: one(users, {
-      fields: [forms.userId],
-      references: [users.id],
-    }),
-    submissions: many(formSubmissions),
-  })
-);
+export const quizzesRelations = relations(quizzes, ({ many, one }) => ({
+  questions: many(questions),
+  user: one(users, {
+    fields: [quizzes.userId],
+    references: [users.id],
+  }),
+  submissions: many(quizzSubmissions),
+}));
 
 export const questions = pgTable("questions", {
   id: serial("id").primaryKey(),
-  text: text("text"),
-  fieldType: formElements("field_type"),
-  formId: integer("form_id"),
+  questionText: text("question_text"),
+  quizzId: integer("quizz_id"),
 });
 
-export const questionsRelations =
-  relations(
-    questions,
-    ({ one, many }) => ({
-      form: one(forms, {
-        fields: [questions.formId],
-        references: [forms.id],
-      }),
-      fieldOptions: many(fieldOptions),
-      answers: many(answers),
-    })
-  );
+export const questionsRelations = relations(questions, ({ one, many }) => ({
+  quizz: one(quizzes, {
+    fields: [questions.quizzId],
+    references: [quizzes.id],
+  }),
+  answers: many(questionAnswers),
+}));
 
-export const fieldOptions = pgTable(
-  "field_options",
-  {
-    id: serial("id").primaryKey(),
-    text: text("text"),
-    value: text("value"),
-    questionId: integer("question_id"),
-  }
-);
+export const questionAnswers = pgTable("answers", {
+  id: serial("id").primaryKey(),
+  questionId: integer("question_id"),
+  answerText: text("answer_text"),
+  isCorrect: boolean("is_correct"),
+  quizzSubmissionId: integer("quizz_submission_id"),
+});
 
-export const fieldOptionsRelations =
-  relations(
-    fieldOptions,
-    ({ one }) => ({
-      question: one(questions, {
-        fields: [
-          fieldOptions.questionId,
-        ],
-        references: [questions.id],
-      }),
-    })
-  );
+export const questionAnswersRelations = relations(questionAnswers, ({ one }) => ({
+  question: one(questions, {
+    fields: [questionAnswers.questionId],
+    references: [questions.id],
+  }),
+}));
 
-export const answers = pgTable(
-  "answers",
-  {
-    id: serial("id").primaryKey(),
-    value: text("value"),
-    questionId: integer("question_id"),
-    formSubmissionId: integer(
-      "form_submission_id"
-    ),
-    fieldOptionsId: integer(
-      "field_options_id"
-    ),
-  }
-);
+export const quizzSubmissions = pgTable("quizz_submissions", {
+  id: serial("id").primaryKey(),
+  quizzId: integer("quizz_id"),
+  completed: boolean("completed"),
+  started: boolean("started"),
+  score: integer("score"),
+});
 
-export const answersRelations = relations(
-  answers,
-  ({ one }) => ({
-    question: one(questions, {
-      fields: [answers.questionId],
-      references: [questions.id],
-    }),
-    formSubmission: one(
-      formSubmissions,
-      {
-        fields: [
-          answers.formSubmissionId,
-        ],
-        references: [
-          formSubmissions.id,
-        ],
-      }
-    ),
-    fieldOption: one(fieldOptions, {
-      fields: [answers.fieldOptionsId],
-      references: [fieldOptions.id],
-    }),
-  })
-);
-
-export const formSubmissions = pgTable(
-  "form_submissions",
-  {
-    id: serial("id").primaryKey(),
-    formId: integer("form_id"),
-  }
-);
-
-export const formSubmissionsRelations =
-  relations(
-    formSubmissions,
-    ({ one, many }) => ({
-      form: one(forms, {
-        fields: [
-          formSubmissions.formId,
-        ],
-        references: [forms.id],
-      }),
-      answers: many(answers),
-    })
-  );
+export const quizzSubmissionsRelations = relations(quizzSubmissions, ({ one, many }) => ({
+  quizz: one(quizzes, {
+    fields: [quizzSubmissions.quizzId],
+    references: [quizzes.id],
+  }),
+}));

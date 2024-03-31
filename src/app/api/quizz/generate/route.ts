@@ -6,6 +6,8 @@ import { HumanMessage } from "@langchain/core/messages";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { JsonOutputFunctionsParser } from "langchain/output_parsers";
 
+import saveQuizz from "./saveToDb";
+
 export async function POST(req: NextRequest) {
   // const body = await req.json();
   const body = await req.formData();
@@ -26,7 +28,7 @@ export async function POST(req: NextRequest) {
     // console.log("metadatas", metadatas);
 
     const prompt =
-      "given the text which is a summary of the document, generate a quiz based on the text. Return json only that contains a quizz object with fields: name, description and questions. The questions is an array of objects with fields: question_text, answers. The answers is an array of objects with fields: answer_text, is_correct.";
+      "given the text which is a summary of the document, generate a quiz based on the text. Return json only that contains a quizz object with fields: name, description and questions. The questions is an array of objects with fields: questionText, answers. The answers is an array of objects with fields: answerText, isCorrect.";
 
     const model = new ChatOpenAI({
       apiKey: process.env.OPENAI_API_KEY,
@@ -63,14 +65,14 @@ export async function POST(req: NextRequest) {
                 items: {
                   type: "object",
                   properties: {
-                    question_text: { type: "string" },
+                    questionText: { type: "string" },
                     answers: {
                       type: "array",
                       items: {
                         type: "object",
                         properties: {
-                          answer_text: { type: "string" },
-                          is_correct: { type: "boolean" },
+                          answerText: { type: "string" },
+                          isCorrect: { type: "boolean" },
                         },
                       },
                     },
@@ -103,9 +105,10 @@ export async function POST(req: NextRequest) {
     // Invoke the runnable with an input
     const result = await runnable.invoke([message]);
 
-    console.log({ result });
+    // Store the Quizz Data in the database
+    const { quizzId } = await saveQuizz(result.quizz);
 
-    return NextResponse.json({ ok: true }, { status: 200 });
+    return NextResponse.json({ quizzId }, { status: 200 });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }

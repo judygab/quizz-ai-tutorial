@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation';
 
 type Props = {}
 
 const UploadDoc = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [document, setDocument] = useState<string | Blob | File | undefined>("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,7 +21,11 @@ const UploadDoc = (props: Props) => {
         method: "POST",
         body: formData,
       });
-      if (res.ok) {
+      if (res.status === 200) {
+        const data = await res.json();
+        const quizzId = data.quizzId;
+
+        router.push(`/quizz/${quizzId}`);
         console.log("Quizz generated successfully");
       }
     } catch (e) {
