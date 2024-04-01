@@ -2,11 +2,12 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation';
+import LoadingAnimation from '@/components/loadingAnimation';
 
 type Props = {}
 
 const UploadDoc = (props: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [document, setDocument] = useState<string | Blob | File | undefined>("");
   const router = useRouter();
 
@@ -36,6 +37,7 @@ const UploadDoc = (props: Props) => {
 
   return (
     <div className="w-full">
+      {isLoading ? <LoadingAnimation /> :
       <form className="w-full" onSubmit={handleSubmit}>
         <label htmlFor="document" className="bg-secondary w-full flex h-20 rounded-md border-4 border-dashed border-blue-900 relative"><div className="absolute inset-0 m-auto flex justify-center items-center">{document && document?.name ? document.name : "Drag a file"}</div><input
           // value={document}
@@ -46,6 +48,7 @@ const UploadDoc = (props: Props) => {
         /></label>
         <Button size="lg" className="mt-2" type="submit">Generate Quizz 🪄</Button>
       </form>
+      }
     </div>
   )
 }
