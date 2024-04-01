@@ -7,7 +7,7 @@ import LoadingAnimation from '@/components/loadingAnimation';
 type Props = {}
 
 const UploadDoc = (props: Props) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [document, setDocument] = useState<string | Blob | File | undefined>("");
   const router = useRouter();
 

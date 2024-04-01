@@ -26,10 +26,10 @@ const QuizzSubmission = (props: Props) => {
         <p>You scored: {scorePercentage}%</p>
         {
           scorePercentage === 100 ?
-            <div>
+            <div className="flex flex-col items-center">
               <p>Congratulations! 🎉</p>
               <div className="flex justify-center">
-                <Image src="/images/owl-smiling.png" alt="Smiling Owl Image" width={100} height={100} />
+                <Image src="/images/owl-smiling.png" alt="Smiling Owl Image" width={400} height={400} />
               </div>
               <span id="rewardId" />
             </div> :

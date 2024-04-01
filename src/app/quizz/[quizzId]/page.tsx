@@ -1,6 +1,7 @@
 import { db } from '@/db';
 import { quizzes } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import QuizzQuestions from '../QuizzQuestions';
 
 const page = async ({ params }: {
   params: {
@@ -26,7 +27,7 @@ const page = async ({ params }: {
   };
 
   return (
-    <div>page</div>
+    <div><QuizzQuestions quizz={quizz} /></div>
   )
 }
 
