@@ -1,35 +1,22 @@
-The project that uses AI to generate forms.
+The project that uses AI to generate quizzes.
 
 <img width="1399" alt="Screenshot 2024-01-22 at 3 34 26 PM" src="https://github.com/judygab/ai-form-builder-tutorial/assets/50160672/443a69ed-e441-412a-a84e-ea820022c6dc">
 
 ## Tech Stack 
 
-- Next-auth - authentication
+- Next-auth - Authentication
 - Shadcn ui - ui library
 - Open Al - AI Integration
+- Langchain - LLM Framework
 - Drizzle - Orm
-- PostgreSQL - database
-- Stripe - payments
+- PostgreSQL - Database
+- Supabase - Database hosting
+- Stripe - Payments
 - Tanstack - Table
 - Typescript - Type Checking
-- Plausible - Analytics
 - Vercel - Deployment
 - Stripe - Payments
 - Zod - Schema Validation
-
-
-## Features
-
-- Authentication ✅
-- AI Form Generation ✅
-- Form Publish and Submissions ✅
-- View your forms ✅
-- Admin Panel ✅
-- View Results ✅
-- Settings & Upgrade Subscription ✅
-- Analytics  ✅
-- Landing page ✅
-- Edit forms ❌ (open to pull requests)
 
 ## Getting Started
 
@@ -64,7 +51,6 @@ NEXT_PUBLIC_PUBLISHABLE_KEY=""
 STRIPE_SECRET_KEY=""
 STRIPE_WEBHOOK_SECRET=""
 STRIPE_WEBHOOK_LOCAL_SERCRET=""
-PLAUSIBLE_DOMAIN=""
 ```
 
 ## Deploy on Vercel
