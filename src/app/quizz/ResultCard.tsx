@@ -3,14 +3,14 @@ import { clsx } from "clsx"
 import { cn } from "@/lib/utils";
 
 type Props = {
-  isCorrect: boolean | null,
+  isCorrect: boolean | null | undefined,
   correctAnswer: string
 }
 
 const ResultCard = (props: Props) => {
   const { isCorrect } = props;
 
-  if (isCorrect === null) {
+  if (isCorrect === null || isCorrect === undefined) {
     return null
   }
 

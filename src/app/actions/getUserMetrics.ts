@@ -22,21 +22,24 @@ const getUserMetrics = async () => {
     .select({ value: count() })
     .from(questions)
     .innerJoin(quizzes, eq(questions.quizzId, quizzes.id))
-    .innerJoin(users, eq(quizzes.userId, users.id));
+    .innerJoin(users, eq(quizzes.userId, users.id))
+    .where(eq(users.id, userId));
 
   // get total # of submissions
   const numSubmissions = await db
     .select({ value: count() })
     .from(quizzSubmissions)
     .innerJoin(quizzes, eq(quizzSubmissions.quizzId, quizzes.id))
-    .innerJoin(users, eq(quizzes.userId, users.id));
+    .innerJoin(users, eq(quizzes.userId, users.id))
+    .where(eq(users.id, userId));
 
   // get the average score
   const avgScore = await db
     .select({ value: avg(quizzSubmissions.score) })
     .from(quizzSubmissions)
     .innerJoin(quizzes, eq(quizzSubmissions.quizzId, quizzes.id))
-    .innerJoin(users, eq(quizzes.userId, users.id));
+    .innerJoin(users, eq(quizzes.userId, users.id))
+    .where(eq(users.id, userId));
 
   return [
     { label: "# of Quizzes", value: numQuizzes[0].value },
