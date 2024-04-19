@@ -51,6 +51,7 @@ const UploadDoc = () => {
             {document && document?.name ? document.name : "Drag a file"}</div>
           <input type="file" id="document" className="relative block w-full h-full z-50 opacity-0" onChange={handleDocumentUpload} />
         </label>
+        <p className="text-secondary-foreground my-2">Supported file types: pdf</p>
         {error ? <p className="text-red-600">{error}</p> : null}
         <Button size="lg" className="mt-2" type="submit">Generate Quizz 🪄</Button>
       </form>}
